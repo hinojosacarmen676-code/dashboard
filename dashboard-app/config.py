@@ -1,21 +1,17 @@
 import os
-from flask_appbuilder.security.manager import (
-    AUTH_REMOTE_USER,
-    AUTH_DB,
-    AUTH_LDAP,
-    AUTH_OAUTH,
-)
+from flask_appbuilder.security.manager import AUTH_DB
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+SECRET_KEY = "clave_secreta_taller"
+
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Your App secret key
 SECRET_KEY = "mi_clave_secreta_123456789"
 
-# The SQLAlchemy connection string.
-SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:@localhost/dashboard_app"
-# SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
-# SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
 
 # Flask-WTF flag for CSRF
 CSRF_ENABLED = True
@@ -38,6 +34,9 @@ CSRF_ENABLED = True
 # AUTH_LDAP : Is for LDAP
 # AUTH_REMOTE_USER : Is for using REMOTE_USER from web server
 AUTH_TYPE = AUTH_DB
+
+SQLALCHEMY_DATABASE_URI = "sqlite:///dashboard.db"
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Uncomment to setup Full admin role name
 # AUTH_ROLE_ADMIN = 'Admin'
