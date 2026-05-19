@@ -1,17 +1,3 @@
-{% extends "appbuilder/base.html" %}
-
-{% block content %}
-<div class="container">
-    <h2>Reportes del Taller Mecánico</h2>
-
-    <div class="alert alert-info">
-        <h4>Total de ingresos: Bs. {{ ingresos }}</h4>
-    </div>
-
-    <h3>Servicios más solicitados</h3>
-
-    <canvas id="graficaServicios"></canvas>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -24,10 +10,9 @@
         data: {
             labels: nombres,
             datasets: [{
-                label: "Cantidad de servicios",
+                label: "Servicios más solicitados",
                 data: cantidades
             }]
         }
     });
 </script>
-{% endblock %}

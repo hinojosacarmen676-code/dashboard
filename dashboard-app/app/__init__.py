@@ -1,21 +1,35 @@
 from flask import Flask
-from .extensions import db, appbuilder
+
+from .extensions import appbuilder, db
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
-
-    app.config["SECRET_KEY"] = "mi_clave_secreta"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///taller.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config.from_object("config")
 
     db.init_app(app)
 
     with app.app_context():
-        appbuilder.init_app(app, db.session)
 
-        from . import views
+        # importar modelos
+        from .models import (
+            Cliente,
+            Vehiculo,
+            Servicio,
+            OrdenTrabajo,
+            DetalleServicio
+        )
 
+        # crear tablas
         db.create_all()
 
+        # iniciar AppBuilder
+        appbuilder.init_app(app, db.session)
+
+        # importar vistas
+        from . import views
+
     return app
+
+
+app = create_app()

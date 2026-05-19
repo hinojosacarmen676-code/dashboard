@@ -1,0 +1,14 @@
+# Query: mysql+pymysql
+# ContextLines: 1
+
+2 resultados - Archivos de 2
+
+config.py:
+  17  
+  18: SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@localhost/taller_mecanico"
+  19  # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
+
+C:\Users\user\Downloads\taller_mecanico-main\config.py:
+  16  #SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
+  17: SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@localhost/taller_mecanico"
+  18  # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
