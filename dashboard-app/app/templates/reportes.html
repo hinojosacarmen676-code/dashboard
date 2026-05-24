@@ -1,3 +1,61 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>Sistema de Gestión de Taller Mecánico</h2>
+    <h4>Módulo de Reportes y Gráficas</h4>
+
+    <hr>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Clientes</div>
+                <div class="panel-body">
+                    <h3>{{ total_clientes }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">Vehículos</div>
+                <div class="panel-body">
+                    <h3>{{ total_vehiculos }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-warning">
+                <div class="panel-heading">Órdenes</div>
+                <div class="panel-body">
+                    <h3>{{ total_ordenes }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-success">
+                <div class="panel-heading">Ingresos</div>
+                <div class="panel-body">
+                    <h3>Bs. {{ total_ingresos }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h3>Servicios más solicitados</h3>
+
+    <canvas id="graficaServicios" height="100"></canvas>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -10,9 +68,11 @@
         data: {
             labels: nombres,
             datasets: [{
-                label: "Servicios más solicitados",
+                label: "Cantidad de servicios realizados",
                 data: cantidades
             }]
         }
     });
 </script>
+
+{% endblock %}

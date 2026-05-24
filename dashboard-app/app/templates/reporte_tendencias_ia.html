@@ -1,0 +1,159 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+
+<style>
+body { background: #f4f6f9; }
+
+.hero-dashboard {
+    background: linear-gradient(135deg, #111827, #f59e0b);
+    color: white;
+    padding: 35px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.content-card, .ia-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-card:hover, .ia-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+}
+
+.content-card h3 {
+    font-weight: 800;
+    color: #111827;
+}
+
+.chart-box { height: 320px; }
+
+.ia-card {
+    background: #fff7ed;
+    border-left: 6px solid #f59e0b;
+    margin-bottom: 25px;
+}
+
+.ia-card h4 {
+    color: #b45309;
+    font-weight: 800;
+}
+
+.badge-ia {
+    display: inline-block;
+    background: #ffedd5;
+    color: #b45309;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.footer-report {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 30px;
+}
+
+@media (max-width: 900px) {
+    .two-columns { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="container">
+
+    <div class="hero-dashboard">
+        <h1>Reporte 2 - Tendencias y Comportamiento</h1>
+        <p>Interpretación inteligente de patrones, servicios con mayor demanda y clientes frecuentes.</p>
+    </div>
+
+    <div class="two-columns">
+        <div class="content-card">
+            <h3>📊 Servicios con mayor demanda</h3>
+            <p>Compara los servicios realizados para detectar cuáles tienen mayor movimiento.</p>
+            <div class="chart-box"><canvas id="graficaServicios"></canvas></div>
+        </div>
+
+        <div class="content-card">
+            <h3>👤 Clientes frecuentes</h3>
+            <p>Identifica clientes con mayor número de órdenes registradas.</p>
+            <div class="chart-box"><canvas id="graficaClientes"></canvas></div>
+        </div>
+    </div>
+
+    <div class="ia-card">
+        <span class="badge-ia">INTERPRETACIÓN IA</span>
+        <h4>📈 Interpretación inteligente mediante IA</h4>
+        <p>{{ analisis_ia }}</p>
+
+        <hr>
+
+        <h4>✅ Acción recomendada</h4>
+        <p>Crear promociones para servicios con baja demanda y beneficios especiales para clientes frecuentes.</p>
+    </div>
+
+    <div class="footer-report">
+        Sistema Inteligente de Gestión de Taller Mecánico | Reporte 2
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const serviciosNombres = {{ servicios_nombres | tojson }};
+const serviciosCantidades = {{ servicios_cantidades | tojson }};
+
+new Chart(document.getElementById("graficaServicios"), {
+    type: "bar",
+    data: {
+        labels: serviciosNombres,
+        datasets: [{
+            label: "Servicios realizados",
+            data: serviciosCantidades,
+            backgroundColor: "#f59e0b",
+            borderRadius: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+const clientesNombres = {{ clientes_nombres | tojson }};
+const clientesCantidades = {{ clientes_cantidades | tojson }};
+
+new Chart(document.getElementById("graficaClientes"), {
+    type: "bar",
+    data: {
+        labels: clientesNombres,
+        datasets: [{
+            label: "Órdenes por cliente",
+            data: clientesCantidades,
+            backgroundColor: "#0ea5e9",
+            borderRadius: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+
+{% endblock %}

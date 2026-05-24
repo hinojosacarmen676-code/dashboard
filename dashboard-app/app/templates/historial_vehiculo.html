@@ -1,0 +1,102 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+
+<style>
+body { background: #f4f6f9; }
+
+.card-box {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    margin-bottom: 25px;
+}
+
+.estado {
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.pendiente { background: #f59e0b; }
+.proceso { background: #2563eb; }
+.finalizado { background: #22c55e; }
+.cancelado { background: #ef4444; }
+</style>
+
+<div class="container">
+
+    <div class="card-box">
+        <h2>🚗 Historial del Vehículo</h2>
+        <p>Consulta los servicios realizados a cada vehículo del taller.</p>
+
+        <form method="GET">
+            <select name="vehiculo_id" class="form-control">
+                <option value="">Seleccione un vehículo</option>
+                {% for v in vehiculos %}
+                    <option value="{{ v.id }}" {% if vehiculo_id|string == v.id|string %}selected{% endif %}>
+                        {{ v.placa }} - {{ v.marca }} {{ v.modelo }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <br>
+            <button class="btn btn-primary" type="submit">Consultar historial</button>
+        </form>
+    </div>
+
+    {% if vehiculo %}
+    <div class="card-box">
+        <h3>Vehículo: {{ vehiculo.placa }} - {{ vehiculo.marca }} {{ vehiculo.modelo }}</h3>
+        <p><strong>Cliente:</strong> {{ vehiculo.cliente }}</p>
+    </div>
+
+    <div class="card-box">
+        <h3>Órdenes registradas</h3>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Orden</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Servicios</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for o in ordenes %}
+                <tr>
+                    <td>#{{ o.id }}</td>
+                    <td>{{ o.fecha_ingreso }}</td>
+                    <td>
+                        {% if o.estado == "Pendiente" %}
+                            <span class="estado pendiente">Pendiente</span>
+                        {% elif o.estado == "En proceso" %}
+                            <span class="estado proceso">En proceso</span>
+                        {% elif o.estado == "Finalizado" %}
+                            <span class="estado finalizado">Finalizado</span>
+                        {% elif o.estado == "Cancelado" %}
+                            <span class="estado cancelado">Cancelado</span>
+                        {% else %}
+                            {{ o.estado }}
+                        {% endif %}
+                    </td>
+                    <td>Bs. {{ o.total }}</td>
+                    <td>
+                        {% for d in o.detalles %}
+                            {{ d.servicio.nombre }} x {{ d.cantidad }}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

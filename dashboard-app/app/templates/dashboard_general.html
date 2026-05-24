@@ -1,0 +1,204 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+
+<style>
+body { background: #f4f6f9; }
+
+.hero-dashboard {
+    background: linear-gradient(135deg, #0f172a, #2563eb);
+    color: white;
+    padding: 35px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.card-metrica, .content-card, .ia-box {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-metrica:hover, .content-card:hover, .ia-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+}
+
+.card-metrica {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+    margin-bottom: 20px;
+    min-height: 150px;
+}
+
+.card-metrica h2 {
+    font-size: 34px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+.card-metrica p { color: #64748b; }
+
+.icono {
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+.azul { border-bottom: 5px solid #2563eb; }
+.verde { border-bottom: 5px solid #22c55e; }
+.naranja { border-bottom: 5px solid #f59e0b; }
+.rojo { border-bottom: 5px solid #ef4444; }
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 25px;
+}
+
+.content-card, .ia-box {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.10);
+}
+
+.ia-box {
+    background: #eff6ff;
+    border-left: 6px solid #2563eb;
+}
+
+.ia-box h3 {
+    color: #1e40af;
+    font-weight: 800;
+}
+
+.badge-ia {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.chart-box { height: 330px; }
+
+.footer-report {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 30px;
+}
+
+@media (max-width: 900px) {
+    .two-columns { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="container">
+
+    <div class="hero-dashboard">
+        <h1>Reporte 1 - Análisis General del Sistema</h1>
+        <p>Análisis automático generado por IA con métricas generales, servicios más solicitados e ingresos del taller.</p>
+    </div>
+
+    <div class="content-card">
+        <h3>🔎 Filtros del reporte</h3>
+
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Fecha desde</label>
+                    <input type="date" name="fecha_desde" value="{{ fecha_desde }}" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <label>Fecha hasta</label>
+                    <input type="date" name="fecha_hasta" value="{{ fecha_hasta }}" class="form-control">
+                </div>
+
+                <div class="col-md-3">
+                    <label>Estado</label>
+                    <select name="estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="Pendiente" {% if estado == "Pendiente" %}selected{% endif %}>Pendiente</option>
+                        <option value="En proceso" {% if estado == "En proceso" %}selected{% endif %}>En proceso</option>
+                        <option value="Finalizado" {% if estado == "Finalizado" %}selected{% endif %}>Finalizado</option>
+                        <option value="Cancelado" {% if estado == "Cancelado" %}selected{% endif %}>Cancelado</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label>&nbsp;</label><br>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="/dashboard-general/" class="btn btn-default">Limpiar</a>
+                    <a href="/exportar-pdf/" class="btn btn-danger">PDF</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3"><div class="card-metrica azul"><div class="icono">👥</div><h2>{{ total_clientes }}</h2><p>Clientes registrados</p></div></div>
+        <div class="col-md-3"><div class="card-metrica verde"><div class="icono">🚗</div><h2>{{ total_vehiculos }}</h2><p>Vehículos registrados</p></div></div>
+        <div class="col-md-3"><div class="card-metrica naranja"><div class="icono">📋</div><h2>{{ total_ordenes }}</h2><p>Órdenes de trabajo</p></div></div>
+        <div class="col-md-3"><div class="card-metrica rojo"><div class="icono">💰</div><h2>Bs. {{ total_ingresos }}</h2><p>Ingresos totales</p></div></div>
+    </div>
+
+    <div class="two-columns">
+        <div class="content-card">
+            <h3>📊 Gráfica principal: servicios más solicitados</h3>
+            <p>La gráfica identifica los servicios con mayor demanda dentro del taller.</p>
+            <div class="chart-box"><canvas id="graficaGeneral"></canvas></div>
+        </div>
+
+        <div>
+            <div class="ia-box">
+                <span class="badge-ia">ANÁLISIS IA</span>
+                <h3>🤖 Análisis automático generado por IA</h3>
+                <p>{{ analisis_ia }}</p>
+            </div>
+
+            <div class="ia-box">
+                <span class="badge-ia">DECISIÓN</span>
+                <h3>✅ Decisión sugerida</h3>
+                <p>Priorizar el servicio más solicitado, organizar recursos y reforzar la atención para mantener la calidad del taller.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-report">
+        Sistema Inteligente de Gestión de Taller Mecánico | Reporte 1
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const nombres = {{ nombres | tojson }};
+const cantidades = {{ cantidades | tojson }};
+
+new Chart(document.getElementById("graficaGeneral"), {
+    type: "bar",
+    data: {
+        labels: nombres,
+        datasets: [{
+            label: "Cantidad de servicios solicitados",
+            data: cantidades,
+            backgroundColor: "#2563eb",
+            borderRadius: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+
+{% endblock %}
